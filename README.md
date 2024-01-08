@@ -1,5 +1,5 @@
 # corrupt-mysql
-Corrupting MySQL to challenge the monitoring system.
+Corrupting MySQL and testing how the monitoring system reacts.
 
 
 # Usages

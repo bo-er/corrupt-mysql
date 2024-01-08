@@ -4,6 +4,7 @@ go 1.21.3
 
 require (
 	github.com/go-sql-driver/mysql v1.7.1
+	github.com/inhies/go-bytesize v0.0.0-20220417184213-4913239db9cf
 	github.com/spf13/cobra v1.8.0
 )
 

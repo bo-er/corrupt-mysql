@@ -30,6 +30,7 @@ func Execute() {
 func init() {
 	rootCmd.AddCommand(deadlockCmd)
 	rootCmd.AddCommand(slowlogCmd)
+	rootCmd.AddCommand(bigTransaction)
 
 	rootCmd.PersistentFlags().StringVarP(&host, "host", "H", "", "host of the mysql server")
 	rootCmd.PersistentFlags().IntVarP(&port, "port", "P", 3306, "port of the mysql server")

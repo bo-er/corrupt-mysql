@@ -6,7 +6,7 @@ import (
 	"github.com/bo-er/corrupt-mysql/pkg"
 )
 
-const initSQL = `
+const prepareDeadlockSQL = `
 DROP DATABASE IF EXISTS corrupt_mysql_deadlock_test;
 CREATE DATABASE corrupt_mysql_deadlock_test;
 USE corrupt_mysql_deadlock_test;
@@ -43,7 +43,7 @@ func CreateDeadlock(c pkg.Connect) error {
 	if err != nil {
 		return err
 	}
-	err = pkg.BatchExec(db, initSQL)
+	err = pkg.BatchExec(db, prepareDeadlockSQL)
 	if err != nil {
 		return err
 	}

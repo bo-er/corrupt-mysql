@@ -23,3 +23,9 @@ Corrupting MySQL and testing how the monitoring system reacts.
 ```
 
 ![example](./pics/bt.jpg)
+
+## Make MySQL's CPU usage high
+
+```bash
+./corrupt-mysql hcpu -H10.186.62.63 -P25690 -uuniverse_udb -p123
+```

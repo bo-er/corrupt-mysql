@@ -22,7 +22,6 @@ INSERT INTO t() values(),(),(),();
 
 // calling this 10 times we get a transaction of size 10KB
 const quadraticGrowthSQL = `
-USE corrupt_mysql_bigtransaction_test;
 insert into t(x) select x+(select count(1) from t) from t;
 `
 
@@ -67,8 +66,13 @@ func CreatesBigTransactions(c pkg.Connect, maxSize string) error {
 	if err != nil {
 		return err
 	}
+	// maybe there is a better way to do this.
+	_, err = db.Exec(`USE corrupt_mysql_bigtransaction_test;`)
+	if err != nil {
+		return fmt.Errorf("use corrupt_mysql_bigtransaction_test: %s", err.Error())
+	}
 	for i := 1; i <= 10+power; i++ {
-		err = pkg.BatchExec(db, quadraticGrowthSQL)
+		_, err = db.Exec(quadraticGrowthSQL)
 		if err != nil {
 			return fmt.Errorf("calling(%s) for the %dth time: %s", quadraticGrowthSQL, i, err.Error())
 		}

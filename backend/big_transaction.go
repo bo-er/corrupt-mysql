@@ -3,6 +3,7 @@ package backend
 import (
 	"errors"
 	"fmt"
+	"log"
 	"math"
 	"strconv"
 	"strings"
@@ -18,14 +19,13 @@ USE corrupt_mysql_bigtransaction_test;
 DROP TABLE IF EXISTS t;
 CREATE TABLE t(x int primary key auto_increment);
 INSERT INTO t() values(),(),(),();
+flush logs;
 `
 
 // calling this 10 times we get a transaction of size 10KB
-const quadraticGrowthSQL = `
-insert into t(x) select x+(select count(1) from t) from t;
-`
+const quadraticGrowthSQL = `insert into t(x) select x+(select count(1) from t) from t;`
 
-func getBytes(size string) (float64, error) {
+func getKiloBytes(size string) (float64, error) {
 	b, err := bytesize.Parse(size)
 	if err != nil {
 		return 0, fmt.Errorf("parse %s to bytes: %s", size, err.Error())
@@ -41,16 +41,23 @@ func getBytes(size string) (float64, error) {
 	return kb, nil
 }
 
+// we do have a pattern
+// 20 10MB
+// 21 20MB
+// 22 40MB
+// 23 80MB
+// 24 160MB
 func getPower(size string) (int, error) {
-	bytes, err := getBytes(size)
+	kb, err := getKiloBytes(size)
 	if err != nil {
 		return 0, fmt.Errorf("parse %s to bytes: %s", size, err.Error())
 	}
-	if bytes < 10 {
+	if kb < 10 {
 		return 0, errors.New("please enter a number that's bigger than 10 kilobytes")
 	}
-	ratio := bytes / 10
-	return int(math.Log2(math.Ceil(ratio))), nil
+	fmt.Println("bytes: ", kb)
+	ratio := (kb / 10240) * 20
+	return int(math.Ceil(ratio)), nil
 }
 
 func CreatesBigTransactions(c pkg.Connect, maxSize string) error {
@@ -72,6 +79,7 @@ func CreatesBigTransactions(c pkg.Connect, maxSize string) error {
 		return fmt.Errorf("use corrupt_mysql_bigtransaction_test: %s", err.Error())
 	}
 	for i := 1; i <= 10+power; i++ {
+		log.Printf("executing SQL(%s), times: %d\n", quadraticGrowthSQL, i)
 		_, err = db.Exec(quadraticGrowthSQL)
 		if err != nil {
 			return fmt.Errorf("calling(%s) for the %dth time: %s", quadraticGrowthSQL, i, err.Error())

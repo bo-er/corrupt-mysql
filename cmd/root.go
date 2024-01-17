@@ -15,9 +15,8 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "",
-	Short: "",
-	Long:  `corrupt mysql for checking purposes.`,
+	Short: "corrupt-mysql",
+	Long:  `corrupt mysql for testing purposes.`,
 }
 
 func Execute() {

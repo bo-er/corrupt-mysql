@@ -57,3 +57,12 @@ func BatchExec(db *sql.DB, sqls string) error {
 	}
 	return nil
 }
+
+func Exec(db *sql.DB, sql string, args ...any) error {
+	_, err := db.Exec(sql, args...)
+	if err != nil {
+		return fmt.Errorf("sql: %s,initializing databases: %s", sql, err.Error())
+	}
+	fmt.Println(sql)
+	return nil
+}

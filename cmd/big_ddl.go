@@ -7,11 +7,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// deadlockCmd creates a deadlock in a MySQL instance.
-var deadlockCmd = &cobra.Command{
-	Use:   "deadlock",
-	Short: "creating a deadlock in a MySQL instance.",
-	Long:  `./corrupt-mysql deadlock -H10.186.62.63 -P25690 -uuniverse_udb -p123`,
+// bigDDLCmd creates a big DDL in a MySQL instance.
+var bigDDLCmd = &cobra.Command{
+	Use:   "bigddl",
+	Short: "creating a big DDL in a MySQL instance.",
+	Long:  `./corrupt-mysql bigddl -H10.186.62.63 -P25690 -uuniverse_udb -p123`,
 	Run: func(cmd *cobra.Command, args []string) {
 		connect := pkg.Connect{
 			User:     user,
@@ -20,7 +20,7 @@ var deadlockCmd = &cobra.Command{
 			DBName:   "mysql",
 			Port:     port,
 		}
-		err := backend.CreateDeadlock(connect)
+		err := backend.CreateBigDDL(connect)
 		if err != nil {
 			logrus.Error(err)
 		}

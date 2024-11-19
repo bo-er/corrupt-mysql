@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/bo-er/corrupt-mysql/backend"
 	"github.com/bo-er/corrupt-mysql/pkg"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +26,8 @@ var bigTransaction = &cobra.Command{
 
 		err := backend.CreatesBigTransactions(connect, args[0])
 		if err != nil {
-			panic(err.Error())
+			logrus.Error(err)
 		}
+		logrus.Info("operation is done")
 	},
 }

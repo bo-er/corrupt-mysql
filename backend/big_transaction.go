@@ -10,6 +10,7 @@ import (
 
 	"github.com/bo-er/corrupt-mysql/pkg"
 	"github.com/inhies/go-bytesize"
+	"github.com/sirupsen/logrus"
 )
 
 const prepareBigTransactionSQL = `
@@ -55,7 +56,7 @@ func getPower(size string) (int, error) {
 	if kb < 10 {
 		return 0, errors.New("please enter a number that's bigger than 10 kilobytes")
 	}
-	fmt.Println("bytes: ", kb)
+	logrus.Info("bytes: ", kb)
 	ratio := (kb / 10240) * 20
 	return int(math.Ceil(ratio)), nil
 }
